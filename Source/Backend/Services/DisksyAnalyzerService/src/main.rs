@@ -1,4 +1,4 @@
-use std::{env, path::Path};
+use std::{env, path::Path, io::{self, Error}, fs::Metadata};
 
 use sysinfo::{System, SystemExt, DiskExt};
 use walkdir::WalkDir;
@@ -10,7 +10,7 @@ mod structs {
     pub mod file;
 }
 
-fn main() {
+fn main() -> io::Result<()>{
 
     let mut sys = System::new_all();
 
@@ -33,11 +33,26 @@ fn main() {
     }
     std::env::set_current_dir(Path::new("C:\\")).unwrap();
     print!("current: {:?}", std::env::current_dir().unwrap());
-    for entry in WalkDir::new(env::current_dir().unwrap()).follow_links(true) {
+
+    for entry in WalkDir::new(env::current_dir()?).into_iter().filter_map(|e| e.ok()) {
+        let metadata: Result<Metadata, String> = match entry.path().metadata() {
+            Ok(metadata) => {Ok(metadata)},
+            Err(e) => {
+                println!("err: {:?}", e);
+                Err("".to_string())
+            }
+        };
+        let mut size = 0;
+        match metadata {
+            Ok(metadata) => {
+                size = metadata.len()
+            }
+            Err(e) => println!("err: {:?}", e)
+        }
         let file_info: FileInfo = FileInfo {
-            file_name: entry.as_ref().unwrap().path().display().to_string(),
+            file_name: entry.path().display().to_string(),
             size: FileSize {
-                size: entry.unwrap().path().metadata().unwrap().len()
+                size
             }
         };
         if file_info.size.as_mb() >= 0.1 {
@@ -47,4 +62,5 @@ fn main() {
             println!("path: {}, size {:.3}kb", file_info.file_name, file_info.size.as_kb());
         }
     }
+    Ok(())
 }
