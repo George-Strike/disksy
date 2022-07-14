@@ -1,3 +1,4 @@
+use serde::Serialize;
 use sysinfo::DiskType;
 
 pub trait DiskSizeConversion {
@@ -9,15 +10,27 @@ pub trait DiskSizeConversion {
     fn get_used_perfectage(&self) -> f64;
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
+#[serde(remote = "DiskType")]
+pub enum DiskTypeDef {
+    /// HDD type.
+    HDD,
+    /// SSD type.
+    SSD,
+    /// Unknown type.
+    Unknown(isize),
+}
+
+#[derive(Debug, Serialize)]
 pub struct DiskInfo {
     pub name: String,
     pub file_system: String,
+    #[serde(with = "DiskTypeDef")]
     pub disk_type: DiskType,
     pub label: String,
     pub disk_size_info: DiskSizeInfo
 }
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct DiskSizeInfo {
     pub available_space_bytes: u64,
     pub total_space_bytes: u64,

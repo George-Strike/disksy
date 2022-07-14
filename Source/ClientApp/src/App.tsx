@@ -1,45 +1,40 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import logo from './logo.svg'
 import './App.css'
+import { Col, Row } from 'antd';
 
-function App() {
-  const [count, setCount] = useState(0)
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  )
+
+const App: React.FC = () => {
+  const [diskValues, setdiskValues] = useState("");
+  useEffect(() => {
+      fetch("/get-disk-data")
+        .then(res => res.json())
+        .then(
+          (result) => {
+            console.log(result.data);
+            setdiskValues(result.data);
+          },
+          // Note: it's important to handle errors here
+          // instead of a catch() block so that we don't swallow
+          // exceptions from actual bugs in components.
+          (error) => {
+            setdiskValues("")
+          }
+        )
+    
+  });
+ 
+  return <Row>
+    <Col span={8}>{diskValues}</Col>
+    <Col span={8}>col-8</Col>
+    <Col span={8}>col-8</Col>
+  </Row>
 }
+
+
+
+
+
 
 export default App
