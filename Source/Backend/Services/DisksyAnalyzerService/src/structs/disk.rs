@@ -34,6 +34,8 @@ pub struct DiskInfo {
 pub struct DiskSizeInfo {
     pub available_space_bytes: u64,
     pub total_space_bytes: u64,
+    pub available_space_gb: u64,
+    pub total_space_gb: u64
 }
 
 impl DiskSizeConversion for DiskSizeInfo { 
