@@ -10,11 +10,12 @@ use actix_files as fs;
 mod structs {
     pub mod disk;
     pub mod file;
+    pub mod directory;
 }
 
 use actix_web::{get, web, App, HttpServer, Responder, middleware::Logger};
 
-use crate::controllers::disk_controller::get_disk_data;
+use crate::controllers::{disk_controller::get_disk_data, directory_controller::directory};
 
 async fn greet() -> String {
     format!("Hello !")
@@ -38,6 +39,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::new("%a %{User-Agent}i"))
             .wrap(cors)
             .service(get_disk_data)
+            .service(directory)
             .route("/hello", web::get().to( greet ))
             /*.route("/", web::get().to(single_page_app))
             .service(fs::Files::new("/", "../../../ClientApp/dist/").index_file("index.html"))*/

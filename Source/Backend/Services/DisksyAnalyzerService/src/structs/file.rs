@@ -1,13 +1,18 @@
+use serde::Serialize;
+
 
 pub trait FileSizeConversion {
     fn as_kb(&self) -> f64;
     fn as_mb(&self) -> f64;
 }
 
+#[derive(Debug, Serialize)]
 pub struct FileInfo {
     pub file_name: String,
     pub size: FileSize,
 }
+
+#[derive(Debug, Serialize)]
 pub struct FileSize {
     pub size: u64,
 }
