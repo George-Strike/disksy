@@ -24,16 +24,16 @@ pub fn walk_dir() -> Result<(), Error> {
             Err(e) => println!("err: {:?}", e)
         }
         let file_info: FileInfo = FileInfo {
-            file_name: entry.path().display().to_string(),
+            name: entry.path().display().to_string(),
             size: FileSize {
                 size
             }
         };
         if file_info.size.as_mb() >= 0.1 {
-            println!("path: {}, size {:.3}mb", file_info.file_name, file_info.size.as_mb());
+            println!("path: {}, size {:.3}mb", file_info.name, file_info.size.as_mb());
         } 
         else {
-            println!("path: {}, size {:.3}kb", file_info.file_name, file_info.size.as_kb());
+            println!("path: {}, size {:.3}kb", file_info.name, file_info.size.as_kb());
         }
     }
     Ok(())

@@ -1,8 +1,8 @@
 
 export interface FileInfo {
-     file_name: string;
-     size: FileSize;
+    name: string;
+    size: FileSize;
 }
 interface FileSize {
-     size: number;
+    size: number;
 }

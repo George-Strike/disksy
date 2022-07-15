@@ -8,7 +8,7 @@ pub trait FileSizeConversion {
 
 #[derive(Debug, Serialize)]
 pub struct FileInfo {
-    pub file_name: String,
+    pub name: String,
     pub size: FileSize,
 }
 
