@@ -5,28 +5,11 @@
     grid-template-rows: 1fr 1fr;
   }
   
-  .defaultContextmenuArea {
-    grid-row: 1;
-    grid-column: 1;
-    background-color: aqua;
-  }
-  
-  .customContextmenuArea1 {
-    grid-row: 1;
-    grid-column: 2;
-    background-color: sandybrown;
-  }
-  
+
   .customContextmenuArea2 {
     grid-row: 2;
     grid-column: 1;
     background-color: tomato;
-  }
-  
-  .customContextmenuArea3 {
-    grid-row: 2;
-    grid-column: 2;
-    background-color: powderblue;
   }
   
   .contextMenu {
@@ -37,6 +20,7 @@
     position: absolute;
     height: auto;
     width: fit-content;
+    
   }
   
   .optionsList {
