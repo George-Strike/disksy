@@ -15,7 +15,7 @@ const App: React.FC = () => {
   }
 
   const getData = () => {
-    fetch("/get-disk-data")
+    fetch("http://localhost:9876/get-disk-data")
       .then(res => res.json())
       .then(
         (result) => {

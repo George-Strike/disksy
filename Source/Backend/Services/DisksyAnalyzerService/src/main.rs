@@ -36,10 +36,11 @@ async fn main() -> std::io::Result<()> {
         let cors = Cors::permissive();
         App::new()
             .wrap(Logger::new("%a %{User-Agent}i"))
+            .wrap(cors)
             .service(get_disk_data)
             .route("/hello", web::get().to( greet ))
-            .route("/", web::get().to(single_page_app))
-            .service(fs::Files::new("/", "../../../ClientApp/dist/").index_file("index.html"))
+            /*.route("/", web::get().to(single_page_app))
+            .service(fs::Files::new("/", "../../../ClientApp/dist/").index_file("index.html"))*/
 
     })
     .bind(("0.0.0.0", 9876))?
