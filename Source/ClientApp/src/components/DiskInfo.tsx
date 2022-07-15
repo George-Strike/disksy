@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { Col, Progress, Row } from 'antd';
+import { Button, Col, Progress, Row } from 'antd';
 import { DiskInfo } from '../bindings/disk';
 import React from 'react';
 import { DiskContext } from '../App';
@@ -21,8 +21,11 @@ const DiskInfoGeneric: React.FC = () => {
 
   const onSearch = (value: string) => {
     console.log(value)
-    setShowDirectory(true);
-    setDirectoryPath(value);
+      setDirectoryPath(value);
+      setShowDirectory(true);
+  };
+  const onClick = () => {
+      setShowDirectory(false);
   };
 
   return <div><Row>
@@ -56,10 +59,14 @@ const DiskInfoGeneric: React.FC = () => {
           enterButton="Search"
           size="large"
           onSearch={onSearch}
-          style={{paddingTop: "2.5em", paddingBottom: "2em"}}
+          style={{ paddingTop: "2.5em", paddingBottom: "2em" }}
         />
+        <Button type="primary" size={"large"} onClick={onClick}>
+          Reset
+        </Button>
       </Col>
-      
+
+
       {showDirectory ? <Col span={24}>
         <Directory directoryPath={directoryPath} />
       </Col> : null}

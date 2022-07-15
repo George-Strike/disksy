@@ -29,9 +29,10 @@ const Directory: React.FC<{directoryPath: string}> = ({directoryPath}) => {
       }, []);    
 
 
-  return <div>
+  return <div style={{paddingTop: "2em"}}>
     <Row>
         <Col>
+        <h2>Directory</h2>
         <p>{directoryValues?.name + "\n"}</p>
         <p>{directoryValues?.path + "\n"}</p>
         <p>{directoryValues?.files ? directoryValues?.files?.toString() + "\n" : null}</p>
