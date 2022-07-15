@@ -4,15 +4,14 @@ import './App.css'
 import { Col, Progress, Row } from 'antd';
 import { DiskInfo } from './bindings/disk';
 import 'antd/dist/antd.css';
+import React from 'react';
+import DiskInfoGeneric from './components/DiskInfo';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+export const DiskContext = React.createContext<DiskInfo[]>([]);
 
 const App: React.FC = () => {
   const [diskValues, setdiskValues] = useState<DiskInfo[]>([]);
-
-  const calculateTotalUsedPercentage = (total: number, free: number) => {
-    let used: number = total - free;
-    let usedPercentage: number = (used / total) * 100;
-    return Math.round(usedPercentage);
-  }
 
   const getData = () => {
     fetch("http://localhost:9876/get-disk-data")
@@ -23,6 +22,7 @@ const App: React.FC = () => {
           setdiskValues(result);
         },
         (error) => {
+          console.log(error);
           setdiskValues([])
         }
       )
@@ -32,28 +32,13 @@ const App: React.FC = () => {
 
   }, []);
 
-  return <Row>
-    {diskValues.map(x =>{ 
-      const usedPercentage: number = calculateTotalUsedPercentage(x.disk_size_info.total_space_gb, x.disk_size_info.available_space_gb);
-      return <Col span={6}>
-      <Row>
-        <Col span={12}>
-          <h3>Disk Info</h3>
-          <p>Disk Label: {x.label}<br></br> Name: {x.name !== "" ? x.name : "Local Drive"}<br></br>
-          Remaining Space: {x.disk_size_info.available_space_gb}gb/{x.disk_size_info.total_space_gb}gb <br></br> Disk Type: {x.disk_type}<br></br></p>
-        </Col>
-
-        <Col span={12}>
-          <h3>Percent Used</h3>
-        <Progress type="circle"
-          strokeColor={usedPercentage > 75 ? "red" : usedPercentage >= 50 ? "#d4b402" : "green"}
-          percent={usedPercentage} />
-      
-        </Col>
-      </Row>
-    </Col>
-  })}
-  </Row>
+  return <DiskContext.Provider value={diskValues}>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<DiskInfoGeneric />} />
+      </Routes>
+    </BrowserRouter>
+  </DiskContext.Provider>
 
 }
 
