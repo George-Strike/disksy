@@ -1,6 +1,6 @@
 use actix_web::{get, Responder, HttpResponse, web};
 
-use crate::structs::{directory::DirectoryInfo, file::{FileInfo, FileSize}};
+use crate::structs::{directory::DirectoryInfo, file::FileInfo};
 
 
 #[get("/directory/{directory_path}")]
@@ -8,9 +8,7 @@ pub async fn directory(directory_path: web::Path<String>) -> impl Responder {
     let mut files: Vec<FileInfo> = Vec::new();
     let file_info: FileInfo = FileInfo {
         name: "File1".to_string(),
-        size: FileSize {
-            size: 10
-        }
+        size: 10
     };
     files.push(file_info);
     

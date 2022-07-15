@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
-import logo from './logo.svg'
 import './App.css'
-import { Col, Progress, Row } from 'antd';
 import { DiskInfo } from './bindings/disk';
 import 'antd/dist/antd.css';
 import React from 'react';
@@ -28,6 +26,9 @@ const App: React.FC = () => {
       )
   }
   useEffect(() => {
+    // document.addEventListener("contextmenu", (event) => {
+    //   event.preventDefault()
+    // });
     getData()
 
   }, []);

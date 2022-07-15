@@ -1,15 +1,27 @@
-import { useContext, useEffect, useState } from 'react'
-import { Col, Progress, Row, Space, Table, Tag } from 'antd';
-import { DiskInfo } from '../bindings/disk';
+import { useEffect, useState } from 'react'
+import { Col, Row, Table } from 'antd';
 import React from 'react';
-import { DiskContext } from '../App';
 import { DirectoryInfo } from '../bindings/directory';
 import Column from 'antd/lib/table/Column';
-import ColumnGroup from 'antd/lib/table/ColumnGroup';
-
+import { TableRowSelection } from 'antd/lib/table/interface';
+import ContextEventMenu, { MenuEvent } from './ContextEventMenu';
+import './Directory.css'
 
 const Directory: React.FC<{ directoryPath: string }> = ({ directoryPath }) => {
     const [directoryValues, setDirectoryValues] = useState<DirectoryInfo[]>([]);
+
+    const rowSelection: TableRowSelection<DirectoryInfo> = {
+        onChange: (selectedRowKeys: any, selectedRows: any) => {
+          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        },
+        onSelect: (record: any, selected: any, selectedRows: any) => {
+          console.log(record, selected, selectedRows);
+        },
+        onSelectAll: (selected: any, selectedRows: any, changeRows: any) => {
+          console.log(selected, selectedRows, changeRows);
+        },
+      };
+    
 
     const getData = () => {
         fetch(`http://localhost:9876/directory/${directoryPath}`)
@@ -32,22 +44,25 @@ const Directory: React.FC<{ directoryPath: string }> = ({ directoryPath }) => {
     }, []);
 
 
-    return <div style={{ paddingTop: "2em" }}>
+    return <div style={{ paddingTop: "2em" }} id="directoryDataTable" className="directoryDataTable">
+         <ContextEventMenu
+          targetId='directoryDataTable'
+          options={[MenuEvent.Delete, MenuEvent.Update]}
+          classes={{
+            listWrapper: 'directoryDataTableListWrapper',
+            listItem: 'directoryDataTableListItem'
+          }}
+        />
         <Row>
             <Col span={20}>
-                <Table dataSource={directoryValues}  
-                    expandable={{
-                        expandedRowRender: record => <p style={{ margin: 0, textAlign: "center" }}>{record.files?.map(x => x.name)}</p>,
-                        rowExpandable: record => record.name !== 'Not Expandable',
-                    }}>
+                <Table 
+                    childrenColumnName='files'
+                    dataSource={directoryValues}
+                    rowSelection={{ ...rowSelection}}
+                >
                     <Column title="Directory" dataIndex="name" key="name" />
                     <Column title="Size" dataIndex="size" key="size" />                    
                 </Table>
-                {/* <h2>Directory</h2>
-        <p>{directoryValues?.name + "\n"}</p>
-        <p>{directoryValues?.path + "\n"}</p>
-        <p>{directoryValues?.files ? directoryValues?.files?.toString() + "\n" : null}</p>
-        <p>{directoryValues?.size + "\n"}</p> */}
             </Col>
         </Row>
     </div>

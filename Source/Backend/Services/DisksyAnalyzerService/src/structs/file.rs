@@ -9,15 +9,10 @@ pub trait FileSizeConversion {
 #[derive(Debug, Serialize)]
 pub struct FileInfo {
     pub name: String,
-    pub size: FileSize,
-}
-
-#[derive(Debug, Serialize)]
-pub struct FileSize {
     pub size: u64,
 }
 
-impl FileSizeConversion for FileSize { 
+impl FileSizeConversion for FileInfo { 
     fn as_kb(&self) -> f64 {
         self.size as f64 / 1024f64
     }

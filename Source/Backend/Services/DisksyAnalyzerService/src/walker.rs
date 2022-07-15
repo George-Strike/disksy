@@ -2,7 +2,7 @@ use std::{path::Path, env, fs::Metadata, io::Error};
 
 use jwalk::{WalkDir, Parallelism};
 
-use crate::structs::file::{FileInfo, FileSize, FileSizeConversion};
+use crate::structs::file::{FileInfo, FileSizeConversion};
 
 pub fn walk_dir() -> Result<(), Error> {
     std::env::set_current_dir(Path::new("C:\\")).unwrap();
@@ -25,15 +25,13 @@ pub fn walk_dir() -> Result<(), Error> {
         }
         let file_info: FileInfo = FileInfo {
             name: entry.path().display().to_string(),
-            size: FileSize {
-                size
-            }
+            size
         };
-        if file_info.size.as_mb() >= 0.1 {
-            println!("path: {}, size {:.3}mb", file_info.name, file_info.size.as_mb());
+        if file_info.as_mb() >= 0.1 {
+            println!("path: {}, size {:.3}mb", file_info.name, file_info.as_mb());
         } 
         else {
-            println!("path: {}, size {:.3}kb", file_info.name, file_info.size.as_kb());
+            println!("path: {}, size {:.3}kb", file_info.name, file_info.as_kb());
         }
     }
     Ok(())
