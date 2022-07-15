@@ -1,44 +1,54 @@
 import { useEffect, useState } from 'react'
 import logo from './logo.svg'
 import './App.css'
-import { Col, Row } from 'antd';
-
-
+import { Col, Progress, Row } from 'antd';
+import { DiskInfo } from './bindings/disk';
+import 'antd/dist/antd.css';
 
 const App: React.FC = () => {
-  const [diskValues, setdiskValues] = useState<any[]>([]);
+  const [diskValues, setdiskValues] = useState<DiskInfo[]>([]);
+
+  const calculateTotalUsedPercentage = (total: number, free: number) => {
+    let used: number = total - free;
+    let usedPercentage: number = (used / total) * 100;
+    return Math.round(usedPercentage);
+  }
 
   const getData = () => {
     fetch("/get-disk-data")
-        .then(res => res.json())
-        .then(
-          (result) => {
-            console.log(result);
-            setdiskValues(result);
-          },
-          // Note: it's important to handle errors here
-          // instead of a catch() block so that we don't swallow
-          // exceptions from actual bugs in components.
-          (error) => {
-            setdiskValues([])
-          }
-        )
+      .then(res => res.json())
+      .then(
+        (result) => {
+          console.log(result);
+          setdiskValues(result);
+        },
+        (error) => {
+          setdiskValues([])
+        }
+      )
   }
   useEffect(() => {
     getData()
-    
+
   }, []);
- 
+
   return <Row>
-    <Col span={8}>{diskValues.map(x => <p>Disk Label: {x.label}, Name: {x.name !== "" ? x.name : "Local Drive"}, Remaining Space: {x.disk_size_info.available_space_gb}gb/{x.disk_size_info.total_space_gb}gb, Disk Type: {x.disk_type}</p>)}</Col>
-    <Col span={8}>col-8</Col>
-    <Col span={8}>col-8</Col>
+    {diskValues.map(x => <Col span={6}>
+      <Row>
+        <Col span={12}><p>Disk Label: {x.label}<br></br> Name: {x.name !== "" ? x.name : "Local Drive"}<br></br>
+          Remaining Space: {x.disk_size_info.available_space_gb}gb/{x.disk_size_info.total_space_gb}gb <br></br> Disk Type: {x.disk_type}<br></br></p>
+        </Col>
+
+        <Col span={12}>
+        <Progress type="circle"
+          strokeColor={calculateTotalUsedPercentage(x.disk_size_info.total_space_gb, x.disk_size_info.available_space_gb) > 75 ? "red" : calculateTotalUsedPercentage(x.disk_size_info.total_space_gb, x.disk_size_info.available_space_gb) >= 50 ? "#d4b402" : "green"}
+          percent={calculateTotalUsedPercentage(x.disk_size_info.total_space_gb, x.disk_size_info.available_space_gb)} />
+      
+        </Col>
+      </Row>
+    </Col>)}
   </Row>
+
 }
-
-
-
-
-
 
 export default App
