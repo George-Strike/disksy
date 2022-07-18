@@ -1,4 +1,4 @@
-export enum Event {
-    Delete,
-    Rename
+export enum DirectoryEvent {
+    Delete = "Delete",
+    Rename = "Rename"
 }

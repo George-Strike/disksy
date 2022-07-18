@@ -31,6 +31,7 @@ const DiskInfoGeneric: React.FC = () => {
   return <div><Row>
     {diskValues.map(x => {
       const usedPercentage: number = calculateTotalUsedPercentage(x.disk_size_info.total_space_gb, x.disk_size_info.available_space_gb);
+      const usedTotal: number =  x.disk_size_info.total_space_gb- x.disk_size_info.available_space_gb; 
       return <Col span={6}>
         <Row>
           <Col span={12}>
@@ -43,7 +44,8 @@ const DiskInfoGeneric: React.FC = () => {
             <h3>Percent Used</h3>
             <Progress type="circle"
               strokeColor={usedPercentage > 75 ? "red" : usedPercentage >= 50 ? "#d4b402" : "green"}
-              percent={usedPercentage} />
+              percent={usedPercentage} 
+              />
 
           </Col>
         </Row>
@@ -54,7 +56,7 @@ const DiskInfoGeneric: React.FC = () => {
     <Row>
       <Col span={24}>
         <Search
-          placeholder="input search text"
+          placeholder="Input directory or file path. eg C:\\test"
           allowClear
           enterButton="Search"
           size="large"

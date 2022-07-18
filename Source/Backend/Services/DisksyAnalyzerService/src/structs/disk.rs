@@ -2,7 +2,7 @@ use serde::Serialize;
 use sysinfo::DiskType;
 
 pub trait DiskSizeConversion {
-    fn available_space_bytes_as_mb(&self) -> f64;
+    fn available_space_bytes_size_as_mb(&self) -> f64;
     fn available_space_bytes_as_gb(&self) -> f64;
     fn available_space_bytes_as_tb(&self) -> f64;
     fn total_space_bytes_as_gb(&self) -> f64;
@@ -39,11 +39,11 @@ pub struct DiskSizeInfo {
 }
 
 impl DiskSizeConversion for DiskSizeInfo { 
-    fn available_space_bytes_as_mb(&self) -> f64 {
+    fn available_space_bytes_size_as_mb(&self) -> f64 {
         ((self.available_space_bytes as f64 / 1024f64) / 1024f64).round()
     }
     fn available_space_bytes_as_gb(&self) -> f64 {
-        (self.available_space_bytes_as_mb() / 1024f64).round()
+        (self.available_space_bytes_size_as_mb() / 1024f64).round()
     }
     fn available_space_bytes_as_tb(&self) -> f64 {
         self.available_space_bytes_as_gb().round()

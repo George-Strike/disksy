@@ -1,24 +1,33 @@
-use actix_web::{get, Responder, HttpResponse, web};
+use std::fs;
 
-use crate::structs::{directory::DirectoryInfo, file::FileInfo};
+use actix_web::{get, Responder, HttpResponse, web, post};
+use serde::Deserialize;
 
+use crate::walker::walk_dir;
+
+#[derive(Deserialize)]
+struct DeleteRequest {
+    path: String
+}
 
 #[get("/directory/{directory_path}")]
 pub async fn directory(directory_path: web::Path<String>) -> impl Responder {
-    let mut files: Vec<FileInfo> = Vec::new();
-    let file_info: FileInfo = FileInfo {
-        name: "File1".to_string(),
-        size: 10
+    match walk_dir(directory_path.to_string()) {
+        Ok(dir) => {
+            return HttpResponse::Ok().body(serde_json::to_string(&dir).unwrap())
+        },
+        Err(err) => {return HttpResponse::Ok().body(format!("Error happened: {:?}", err))}
     };
-    files.push(file_info);
-    
-    let directory: DirectoryInfo = DirectoryInfo {
-        name: directory_path.to_string(),
-        path: directory_path.to_string(),
-        files: Some(files),
-        size: 0
-    };
-    HttpResponse::Ok().body(serde_json::to_string(&directory).unwrap())
+}
 
-    //format!("{}/{}", "path", directory_path)
+
+#[post("/directory/delete")]
+pub async fn delete_item(req_body: String) -> impl Responder {
+    let delete_request: DeleteRequest = serde_json::from_str(&req_body).unwrap();
+    println!("path: {}", delete_request.path);
+    match fs::remove_file(delete_request.path) {
+        Ok(()) => HttpResponse::Ok(),
+        Err(err) => HttpResponse::BadRequest()
+    }
+
 }

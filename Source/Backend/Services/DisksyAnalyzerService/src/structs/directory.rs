@@ -7,5 +7,5 @@ pub struct DirectoryInfo {
     pub name: String,
     pub path: String,
     pub size: u64,
-    pub files: Option<Vec<FileInfo>>
+    pub files: Vec<FileInfo>
 }
