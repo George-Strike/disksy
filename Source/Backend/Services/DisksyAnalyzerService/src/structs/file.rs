@@ -9,6 +9,7 @@ pub trait FileSizeConversion {
 #[derive(Clone, Debug, Serialize)]
 pub struct FileInfo {
     pub name: String,
+    pub path: String,
     pub size: u64,
 }
 

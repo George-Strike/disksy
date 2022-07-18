@@ -10,6 +10,12 @@ struct DeleteRequest {
     path: String
 }
 
+#[derive(Deserialize)]
+struct RenameRequest {
+    from_path: String,
+    to_path: String
+}
+
 #[get("/directory/{directory_path}")]
 pub async fn directory(directory_path: web::Path<String>) -> impl Responder {
     match walk_dir(directory_path.to_string()) {
@@ -29,5 +35,14 @@ pub async fn delete_item(req_body: String) -> impl Responder {
         Ok(()) => HttpResponse::Ok(),
         Err(err) => HttpResponse::BadRequest()
     }
+}
 
+#[post("/directory/rename")]
+pub async fn rename_item(req_body: String) -> impl Responder {
+    let rename_request: RenameRequest = serde_json::from_str(&req_body).unwrap();
+    println!("from path: {}, to path: {}", rename_request.from_path, rename_request.to_path);
+    match fs::rename(rename_request.from_path, rename_request.to_path) {
+        Ok(()) => HttpResponse::Ok(),
+        Err(err) => HttpResponse::BadRequest()
+    }
 }

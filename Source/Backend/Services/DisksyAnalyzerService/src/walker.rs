@@ -34,6 +34,7 @@ pub fn walk_dir(directory_path: String) -> Result<Vec<DirectoryInfo>, Error> {
                 else if metadata.is_file() {
                     let mut file_info: FileInfo = FileInfo {
                         name: entry.path().display().to_string(),
+                        path: entry.path().as_path().to_str().unwrap().to_string(),
                         size: metadata.len()
                     };
                     if file_info.size_as_mb() >= 0.1 {
