@@ -4,6 +4,7 @@ use jwalk::{WalkDir, Parallelism};
 
 use crate::structs::{file::{FileInfo, FileSizeConversion}, directory::DirectoryInfo};
 
+// For now, this is fine but slow. Really need to find way to get the MFT data to speed this up.
 pub fn walk_dir(directory_path: String) -> Result<Vec<DirectoryInfo>, Error> {
     println!("test: {}", decode(directory_path.as_str()).unwrap().into_owned());
     std::env::set_current_dir(Path::new(format!("{}", decode(directory_path.as_str()).unwrap().into_owned()).as_str())).unwrap();
@@ -41,6 +42,7 @@ pub fn walk_dir(directory_path: String) -> Result<Vec<DirectoryInfo>, Error> {
                     else {
                         file_info.size = file_info.size_as_kb() as u64;
                     }
+                    // This is not ideal... Figure out a better way to handle parent directories.
                     for i in 0..directory_info_vec.len() {
                         if directory_info_vec[i].path ==  entry.path().parent().unwrap().to_str().unwrap().to_string()
                         {

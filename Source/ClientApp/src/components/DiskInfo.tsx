@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import { Button, Col, Progress, Row } from 'antd';
+import { Button, Col, Progress, Row, Select } from 'antd';
 import { DiskInfo } from '../bindings/disk';
 import React from 'react';
 import { DiskContext } from '../App';
@@ -11,6 +11,7 @@ const DiskInfoGeneric: React.FC = () => {
   const diskValues: DiskInfo[] = useContext(DiskContext);
   const [showDirectory, setShowDirectory] = useState<boolean>(false);
   const [directoryPath, setDirectoryPath] = useState<string>("");
+  const [driveLabel, setdriveLabel] = useState<string>("");
 
 
   const calculateTotalUsedPercentage = (total: number, free: number) => {
@@ -27,6 +28,22 @@ const DiskInfoGeneric: React.FC = () => {
   const onClick = () => {
       setShowDirectory(false);
   };
+
+
+  const { Option } = Select;
+
+  const handleDriveOptionChange = (value: string) => {
+    setdriveLabel(value);
+};
+
+  const selectBefore = (
+      <Select defaultValue="Labels" className="select-before" onChange={handleDriveOptionChange}>
+        {diskValues.map(x => {
+          return <Option value={x.label}>{x.label}</Option>
+        })}
+      </Select>
+    );
+
 
   return <div><Row>
     {diskValues.map(x => {
@@ -56,11 +73,12 @@ const DiskInfoGeneric: React.FC = () => {
     <Row>
       <Col span={24}>
         <Search
-          placeholder="Input directory or file path. eg C:\\test"
+          placeholder="Input directory or file path wihtout label. eg: test/example"
           allowClear
           enterButton="Search"
           size="large"
           onSearch={onSearch}
+          addonBefore={selectBefore}
           style={{ paddingTop: "2.5em", paddingBottom: "2em" }}
         />
         <Button type="primary" size={"large"} onClick={onClick}>
@@ -70,7 +88,7 @@ const DiskInfoGeneric: React.FC = () => {
 
 
       {showDirectory ? <Col span={24}>
-        <Directory directoryPath={directoryPath} />
+        <Directory directoryPath={`${driveLabel}${directoryPath}`} />
       </Col> : null}
     </Row>
   </div>

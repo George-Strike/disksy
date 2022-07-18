@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Col, Dropdown, Menu, Row, Table } from 'antd';
+import { Col, Dropdown, Menu, Row, Select, Table } from 'antd';
 import React from 'react';
 import { DirectoryInfo } from '../bindings/directory';
 import Column from 'antd/lib/table/Column';
@@ -39,7 +39,6 @@ const Directory: React.FC<{ directoryPath: string }> = ({ directoryPath }) => {
     };
 
     const onMenuItemClick = async (path: string, event: string) => {
-        // alert(`${path}, ${event}`);
         let response = await fetch(`http://localhost:9876/directory/${event.toLowerCase()}`, {
             method: 'POST',
             headers: {
